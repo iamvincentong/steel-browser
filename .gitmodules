@@ -1,0 +1,3 @@
+[submodule "docs/workplan"]
+	path = docs/workplan
+	url = git@github-iamvincentong:iamvincentong/work-progress-tracker.git
