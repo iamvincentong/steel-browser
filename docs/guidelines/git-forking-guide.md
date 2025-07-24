@@ -1,13 +1,14 @@
-# Forking and Contribution Guide
+# Fork-Based Development Guide
 
-This guide explains how to fork the Steel Browser project and maintain your own repository while staying synchronized with the upstream project.
+This guide explains how to fork the Steel Browser project for independent development while staying synchronized with valuable upstream improvements.
 
 ## Overview
 
-When you want to contribute to Steel Browser or maintain your own version, you'll need to:
+When you want to develop your own enhanced version of Steel Browser while benefiting from upstream improvements, you'll need to:
 1. Fork the repository to your GitHub account
 2. Set up your local repository to push to your fork
-3. Configure upstream tracking to receive updates from the original repository
+3. Configure upstream tracking to receive valuable updates from the original repository
+4. Establish a unified development workflow on your main branch
 
 ## Prerequisites
 
@@ -133,7 +134,7 @@ git checkout main
   - Bug fixes
   - Code refactoring
   - API changes
-  - Any changes you might want to contribute back via PR
+  - Complex changes that benefit from isolated development
 
 ### Current Situation Example
 
@@ -156,276 +157,306 @@ For this scenario, **Option A is recommended** since these are documentation and
 
 Once you've handled your existing changes, proceed with the regular workflow for future development.
 
-## 4. Long-Term Branch Management Strategy
+## 4. Fork-Based Development Strategy
 
-After setting up your fork and handling initial changes, you need a sustainable strategy for managing different types of changes over time. This section provides strategic guidance for maintaining clean, efficient git workflows.
+After setting up your fork and handling initial changes, establish a unified development approach where your main branch evolves as your enhanced version of Steel Browser while selectively benefiting from upstream improvements.
 
-### 4.1 Types of Changes Analysis
+### 4.1 Fork-First Philosophy
 
-Understanding the nature of your changes helps determine the best management approach:
+Your fork represents your enhanced version of Steel Browser. Unlike traditional contribution-focused workflows, your main branch contains ALL your improvements, customizations, and enhancements without artificial separation of change types.
 
-#### **Personal/Local Changes (Keep in Your Fork)**
+#### **Core Principles**
 
-- **CLAUDE.md** - Personal documentation for Claude Code
-- **.claude/** - Personal configuration directories
-- **Local environment configs** - IDE settings, personal scripts
-- **Private notes and documentation** - Internal development notes
+- **Unified Development**: Your main branch is your primary development workspace
+- **Selective Integration**: Cherry-pick valuable upstream improvements
+- **Enhancement Tracking**: Maintain clear history of your improvements vs upstream changes
+- **Simplified Workflow**: Minimize branching complexity, maximize development efficiency
 
-#### **Upstream-Worthy Changes (Contribute Back)**
+#### **Strategic Benefits**
 
-- **Bug fixes** - Fixes that benefit the community
-- **Feature enhancements** - New functionality or improvements
-- **Documentation improvements** - Better guides, examples, or clarity
-- **Performance optimizations** - Code improvements
+- **Independent Evolution**: Your fork can evolve according to your needs
+- **Upstream Value**: Still benefit from bug fixes and valuable features
+- **Reduced Complexity**: No need for complex branch coordination
+- **Clear Ownership**: Your main branch represents your vision of Steel Browser
 
-#### **Ambiguous Changes (Evaluation Needed)**
+### 4.2 Unified Development Workflow
 
-- **Configuration changes** - May be environment-specific or broadly useful
-- **Build improvements** - Could be personal workflow or project enhancement
-- **Documentation updates** - Might be personal notes or community-beneficial
-
-### 4.2 Recommended Hybrid Strategy
-
-The most sustainable approach uses different branch strategies for different change types:
-
-#### **Strategy Overview**
-
-- **`main` branch**: Clean, synced with upstream only
-- **`personal/config` branch**: Permanent branch for personal changes
-- **`feature/name` branches**: Temporary branches for upstream contributions
-
-#### **Personal Branch Management**
-Create a permanent personal branch for your configurations:
+#### **Primary Development Pattern**
 
 ```bash
-# Create personal branch from current feature branch
-git checkout feature/add-claude-documentation
-git checkout -b personal/config
+# Most development happens directly on main
+git checkout main
 
-# Keep only personal files
-git reset --soft main
-git add CLAUDE.md .claude/
-git commit -m "Add personal configuration and documentation"
+# Make your improvements
+git add .
+git commit -m "Add feature: your enhancement description"
 
 # Push to your fork
-git push origin personal/config
-```
-
-#### **Feature Branch Management**
-
-Use temporary feature branches for upstream contributions:
-
-```bash
-# Create feature branch from main
-git checkout main
-git checkout -b feature/improve-documentation
-
-# Add only upstream-worthy changes
-git add docs/guidelines/
-git commit -m "Improve git workflow documentation"
-
-# Push to your fork
-git push origin feature/improve-documentation
-```
-
-### 4.3 Sustainable Workflow Patterns
-
-#### **Regular Sync Pattern**
-
-Keep your main branch up-to-date with upstream:
-
-```bash
-# Fetch latest changes from upstream
-git fetch upstream
-
-# Switch to main and merge upstream changes
-git checkout main
-git merge upstream/main
-
-# Push updates to your fork
 git push origin main
 ```
 
-#### **Personal Branch Maintenance**
+#### **Feature Branches (Optional for Complex Work)**
 
-Keep your personal branch updated with main:
-
-```bash
-# Switch to personal branch
-git checkout personal/config
-
-# Rebase onto updated main (preserves your personal changes)
-git rebase main
-
-# Force push with lease (safer than regular force push)
-git push origin personal/config --force-with-lease
-```
-
-#### **Feature Development Cycle**
-
-Standard workflow for contributing features:
+Use feature branches sparingly, only for complex multi-day work:
 
 ```bash
-# 1. Start from updated main
-git checkout main
-git pull upstream main
+# For complex experimental features
+git checkout -b feature/experimental-enhancement
 
-# 2. Create feature branch
-git checkout -b feature/your-feature-name
-
-# 3. Work on feature
+# Develop the feature
 git add .
-git commit -m "Implement feature: description"
+git commit -m "Implement experimental feature"
 
-# 4. Push to your fork
-git push origin feature/your-feature-name
-
-# 5. Create Pull Request on GitHub
-# 6. After merge, clean up
+# When ready, merge back to main
 git checkout main
-git pull upstream main
-git branch -d feature/your-feature-name
-git push origin --delete feature/your-feature-name
+git merge feature/experimental-enhancement
+git branch -d feature/experimental-enhancement
+git push origin main
 ```
 
-### 4.4 Branch Lifecycle Management
+### 4.3 Selective Upstream Integration
 
-#### **Long-Term Branches (Keep)**
-
-- **`main`** - Always keep, sync with upstream
-- **`personal/config`** - Keep permanently, rebase regularly
-
-#### **Short-Term Branches (Delete After Use)**
-
-- **`feature/*`** - Delete after PR merge
-- **`bugfix/*`** - Delete after PR merge
-- **`hotfix/*`** - Delete after PR merge
-
-#### **Branch Cleanup Commands**
+#### **Regular Upstream Evaluation**
 
 ```bash
-# List all branches
-git branch -a
+# Stay informed about upstream changes
+git fetch upstream
 
-# Delete local feature branch
-git branch -d feature/branch-name
+# Review what's new upstream
+git log --oneline main..upstream/main
 
-# Delete remote feature branch
-git push origin --delete feature/branch-name
+# Check detailed changes
+git diff main upstream/main
+```
 
-# Prune deleted remote branches
+#### **Selective Integration Strategies**
+
+**Option A: Full Merge (When Compatible)**
+```bash
+# If upstream changes are fully compatible
+git checkout main
+git merge upstream/main
+git push origin main
+```
+
+**Option B: Cherry-Pick Specific Changes**
+```bash
+# Pick specific valuable commits
+git cherry-pick <commit-hash-1>
+git cherry-pick <commit-hash-2>
+git push origin main
+```
+
+**Option C: Manual Integration**
+```bash
+# For complex conflicts, manually integrate changes
+git checkout main
+git fetch upstream
+# Review changes and manually apply what you want
+git add .
+git commit -m "Integrate valuable upstream improvements"
+git push origin main
+```
+
+### 4.4 Consolidating Existing Branches
+
+If you're transitioning from a multi-branch setup to fork-based development:
+
+#### **Branch Consolidation Process**
+
+```bash
+# 1. Switch to main branch
+git checkout main
+
+# 2. Merge your feature branches
+git merge feature/enhance-project-workflow
+
+# 3. Merge personal configurations
+git merge personal/config
+
+# 4. Resolve any conflicts, keeping your enhancements
+git add .
+git commit -m "Consolidate all enhancements into unified main branch"
+
+# 5. Push unified main to your fork
+git push origin main
+```
+
+#### **Clean Up Temporary Branches**
+
+```bash
+# Delete local branches
+git branch -d feature/enhance-project-workflow
+git branch -d personal/config
+
+# Delete remote branches
+git push origin --delete feature/enhance-project-workflow
+git push origin --delete personal/config
+
+# Clean up branch tracking
 git remote prune origin
 ```
 
-### 4.5 Handling Mixed Changes
+### 4.5 Fork Evolution Management
 
-When you have both personal and upstream-worthy changes in one branch:
+#### **Track Your Enhancements**
 
-#### **Split Approach**
-
-```bash
-# Current mixed branch
-git checkout feature/mixed-changes
-
-# Create personal branch for personal changes
-git checkout -b personal/config
-git reset --soft main
-git add CLAUDE.md .claude/
-git commit -m "Personal: Add configurations"
-git push origin personal/config
-
-# Create clean feature branch for upstream changes
-git checkout main
-git checkout -b feature/clean-upstream
-git cherry-pick <commit-hash-for-upstream-changes>
-git push origin feature/clean-upstream
-```
-
-#### **Interactive Rebase Approach**
+Document major enhancements in your fork:
 
 ```bash
-# Rewrite history to separate commits
-git rebase -i main
-
-# In the rebase editor, separate mixed commits
-# Then proceed with branch separation as above
+# Use descriptive commit messages
+git commit -m "feat: add intelligent work progress tracking system"
+git commit -m "enhance: improve git workflow documentation for fork development"
+git commit -m "config: add personal Claude Code integration"
 ```
 
-### 4.6 Best Practices for Long-Term Success
+#### **Maintain Enhancement History**
+
+```bash
+# Periodically review your fork's evolution
+git log --oneline upstream/main..main
+
+# See your unique commits since last upstream sync
+git log --graph --oneline upstream/main..main
+```
+
+### 4.6 Best Practices for Fork Development
+
+#### **Development Efficiency**
+
+- **Main Branch Focus**: Develop primarily on main branch
+- **Selective Branching**: Use feature branches only for complex experimental work
+- **Regular Commits**: Commit frequently with clear, descriptive messages
+- **Push Often**: Keep your fork synchronized with your local changes
+
+#### **Upstream Relationship**
+
+- **Regular Evaluation**: Review upstream changes monthly or as needed
+- **Selective Integration**: Only integrate changes that add value to your fork
+- **Conflict Resolution**: Always preserve your enhancements when conflicts arise
+- **Enhancement Documentation**: Keep clear history of your improvements
 
 #### **Repository Hygiene**
 
-- Keep main branch clean and synced
-- Delete merged feature branches promptly
-- Use descriptive branch names
-- Regular personal branch maintenance
+- **Clean History**: Maintain readable commit history
+- **Descriptive Messages**: Use clear commit messages that explain the value added
+- **Regular Cleanup**: Remove unnecessary branches and keep repository organized
+- **Backup Strategy**: Regular pushes to your fork serve as backup
 
-#### **Commit Organization**
+## 5. Main-Branch Development Workflow
 
-- Separate personal and upstream changes
-- Use clear, descriptive commit messages
-- Atomic commits (one logical change per commit)
-- Regular commits (don't let changes accumulate)
+### Daily Development Routine
 
-#### **Collaboration Etiquette**
-
-- Fork-first approach for contributions
-- Keep PRs focused and small
-- Follow project contribution guidelines
-- Respect upstream maintainer decisions
-
-## 5. Regular Workflow
-
-### Staying Updated with Upstream
-
-Periodically sync your fork with the original repository:
+Your main branch is your primary workspace for building your enhanced version of Steel Browser:
 
 ```bash
-# Fetch the latest changes from upstream
-git fetch upstream
-
-# Switch to your main branch
+# Start your development session
 git checkout main
+git pull origin main
 
-# Merge upstream changes into your main branch
-git merge upstream/main
+# Make your improvements directly on main
+git add .
+git commit -m "enhance: improve browser session management"
 
-# Push the updates to your fork
+# Push your progress regularly
 git push origin main
 ```
 
-### Working on Features
+### Staying Updated with Upstream
 
-1. **Create a feature branch:**
-   
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
+Evaluate and selectively integrate upstream improvements:
 
-2. **Make your changes and commit:**
-   
-   ```bash
-   git add .
-   git commit -m "Add your feature description"
-   ```
+```bash
+# Check for upstream updates
+git fetch upstream
 
-3. **Push the feature branch to your fork:**
-   
-   ```bash
-   git push origin feature/your-feature-name
-   ```
+# Review what's new (optional but recommended)
+git log --oneline main..upstream/main
 
-4. **Create a Pull Request:**
-   - Go to your fork on GitHub
-   - Click "New Pull Request"
-   - Select the feature branch to merge into the original repository
+# Option A: Selective integration (recommended)
+git cherry-pick <specific-commit-hash>
 
-### Best Practices
+# Option B: Full merge (when compatible)
+git merge upstream/main
 
-- **Keep main branch clean:** Only use your main branch for syncing with upstream
-- **Use feature branches:** Create separate branches for each feature or bug fix
-- **Regular updates:** Sync with upstream regularly to avoid conflicts
-- **Meaningful commits:** Write clear, descriptive commit messages
+# Push your updated main branch
+git push origin main
+```
+
+### Feature Development Patterns
+
+#### Primary Pattern: Direct Main Development
+```bash
+# Most features developed directly on main
+git checkout main
+
+# Implement your enhancement
+git add .
+git commit -m "feat: add intelligent tab management"
+
+# Push immediately for backup
+git push origin main
+```
+
+#### Secondary Pattern: Complex Features (Optional)
+For experimental or complex multi-day work:
+
+```bash
+# Create temporary feature branch
+git checkout -b experiment/advanced-automation
+
+# Develop the complex feature
+git add .
+git commit -m "experiment: advanced browser automation"
+
+# When ready, integrate to main
+git checkout main
+git merge experiment/advanced-automation
+git branch -d experiment/advanced-automation
+
+# Push consolidated changes
+git push origin main
+```
+
+### Fork Development vs Traditional Workflows
+
+**❌ What You DON'T Need (Common Misconception):**
+
+Fork-based development is NOT the same as traditional contribution workflows:
+
+```bash
+# ❌ Avoid this traditional pattern within your fork:
+git checkout -b feature/my-feature        # Unnecessary branching
+git push origin feature/my-feature        # Unnecessary feature branch
+# Create PR to merge into your own main   # Unnecessary bureaucracy
+```
+
+**✅ What You DO Need (Fork-Based Approach):**
+
+```bash
+# ✅ Primary pattern - direct main development:
+git checkout main
+git add .
+git commit -m "feat: add browser automation feature"
+git push origin main
+
+# ✅ Secondary pattern - only for complex experimental work:
+git checkout -b experiment/complex-feature
+# ... develop complex feature ...
+git checkout main
+git merge experiment/complex-feature      # Direct merge, no PR needed
+git branch -d experiment/complex-feature
+git push origin main
+```
+
+### Best Practices for Fork Development
+
+- **Main-Branch Focus:** Develop primarily on main branch for simplicity
+- **No Internal PRs:** You own your fork - merge directly, no PRs within your own repository
+- **Regular Commits:** Commit frequently with clear, descriptive messages  
+- **Selective Upstream Integration:** Only merge valuable upstream changes
+- **Enhancement Documentation:** Use clear commit messages that describe value added
+- **Regular Backups:** Push to your fork frequently to prevent data loss
 
 ## 6. Project Structure
 
@@ -453,14 +484,44 @@ docker compose -f docker-compose.dev.yml up --build
 docker compose up
 ```
 
-## 7. Contributing Back to Steel
+## 7. Optional: Contributing Back to Steel (When Desired)
 
-When you're ready to contribute your changes back to the original Steel Browser project:
+Since your fork is designed for independent development, contributing back to the original Steel Browser project is entirely optional. However, if you develop features that would benefit the broader community, you can choose to contribute:
 
-1. Ensure your changes are in a feature branch
-2. Push the branch to your fork
-3. Create a Pull Request from your fork to the original repository
-4. Follow the project's contribution guidelines and code review process
+### When to Consider Contributing
+
+- **Bug fixes** that affect core functionality
+- **Performance improvements** that benefit all users  
+- **General features** that don't compromise your competitive advantages
+- **Documentation improvements** for better project clarity
+
+### Contribution Process (Optional)
+
+If you decide to contribute specific improvements:
+
+```bash
+# Create a clean feature branch from latest upstream
+git fetch upstream
+git checkout -b contrib/feature-name upstream/main
+
+# Cherry-pick or manually implement the specific feature
+git cherry-pick <your-commit-hash>
+# or manually implement the feature in isolation
+
+# Push to your fork
+git push origin contrib/feature-name
+
+# Create Pull Request from your fork to upstream
+```
+
+### Contribution Strategy
+
+- **Selective Sharing:** Only contribute features that align with your goals
+- **Clean Implementation:** Ensure contributed code doesn't include your proprietary enhancements
+- **Maintain Independence:** Keep your main development on your fork's main branch
+- **Community Benefit:** Focus contributions on broadly useful improvements
+
+Remember: Your primary development remains on your fork, and contribution is a secondary, optional activity.
 
 ## 8. Troubleshooting
 
